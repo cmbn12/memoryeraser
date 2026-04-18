@@ -5,7 +5,7 @@ if SERVER then
     local files = {
         "materials/memory_eraser/brain_slide.vmt", "materials/memory_eraser/brain_slide.vtf",
         "materials/memory_eraser/brain_slide2.vmt", "materials/memory_eraser/brain_slide2.vtf",
-        "sound/memory_eraser/heartbeat.wav", "sound/memory_eraser/breath.wav", "sound/memory_eraser/alarm.wav",
+        "sound/memory_eraser/heartbeat.wav", "sound/memory_eraser/breath.wav",
         "sound/memory_eraser/memory.mp3", "sound/memory_eraser/passivemusic.ogg",
         "resource/fonts/cpmonorusbold.ttf"
     }
