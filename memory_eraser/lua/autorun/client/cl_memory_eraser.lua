@@ -1,9 +1,8 @@
 local surface, draw, math, net, timer = surface, draw, math, net, timer
 local CurTime, LocalPlayer = CurTime, LocalPlayer
 local DUR_HELMET, DUR_ERASE, DUR_DIZZY = 1.2, 12, 120
-local MAX_SOUND_DURATION = 90 -- Лимит проигрывания звуков (1.5 минуты)
+local MAX_SOUND_DURATION = 90 
 
--- Хранилище таймеров
 local activeTimers = {}
 local function SafeTimer(name, delay, reps, func)
     timer.Remove("ME_"..name)
@@ -28,7 +27,7 @@ local ME = {
     fadeStart = 0,
     dizzyEnd = 0,
     startTime = 0,
-    soundCutoff = 0, -- Время, когда звуки должны замолчать
+    soundCutoff = 0,
     logs = {},
     nextLog = 0,
     brainAlpha = 0,
@@ -40,7 +39,6 @@ local ME = {
     snd = { music = nil, loop = nil }
 }
 
--- СПИСОК ФОНОВЫХ ЗВУКОВ
 local postEraseSounds = {
     "npc/combine_soldier/vo/prison_soldier_bunker1.wav",
     "npc/combine_soldier/vo/prison_soldier_bunker3.wav",
@@ -65,9 +63,7 @@ local postEraseSounds = {
     "vo/Breencast/br_collaboration05.wav"
 }
 
--- Функция для проигрывания уникальных звуков
 local function PlayUniqueSequence(availableSounds)
-    -- ПРОВЕРКА: Если процедура окончена, звуки кончились ИЛИ прошло 1.5 минуты — выходим
     if not ME.active or #availableSounds == 0 or CurTime() >= ME.soundCutoff then 
         return 
     end
@@ -78,7 +74,6 @@ local function PlayUniqueSequence(availableSounds)
 
     LocalPlayer():EmitSound(snd, 35, math.random(65, 105), 0.4)
 
-    -- Интервал между звуками (от 5 до 10 секунд)
     SafeSimple(math.random(5, 10), function()
         PlayUniqueSequence(availableSounds)
     end)
@@ -135,10 +130,8 @@ net.Receive("Combine_StartSterilization", function()
         ME.snd.loop = CreateSound(ply, "memory_eraser/memory.wav")
         ME.snd.loop:PlayEx(0.5, 100)
 
-        -- Устанавливаем время отключения звуков (текущее время + 1.5 минуты)
         ME.soundCutoff = CurTime() + MAX_SOUND_DURATION
         
-        -- Запускаем цепочку уникальных звуков (вместо старой строки SafeSimple)
         local currentSessionSounds = table.Copy(postEraseSounds)
         SafeSimple(2, function() 
             PlayUniqueSequence(currentSessionSounds)
